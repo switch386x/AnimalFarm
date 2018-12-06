@@ -1,6 +1,7 @@
 package utils;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +83,7 @@ public final class FarmUtilsStreaming {
 	 */
 	
 	public static List<Animal> getAnimalsOfGivenSizes(List<Animal> animals, Size... sizes) {
-	    
+	    return animals.stream().filter(e->e.getSize().in(sizes)).collect(Collectors.toList());
 //		List<Animal> result = new ArrayList<>();
 //		for (int i = 0; i < animals.size(); i++) {
 //			Animal animal = animals.get(i);
@@ -98,39 +99,41 @@ public final class FarmUtilsStreaming {
 	 * second input parameter
 	 */
 	public static int countAnimalsOfGivenSizes(List<Animal> animals, Size... sizes) {
-		int result = 0;
-		for (int i = 0; i < animals.size(); i++) {
-			Animal animal = animals.get(i);
-			if (animal.getSize().in(sizes)) {
-				result++;
-			}
-		}
-		return result;
+//	    int result = 0;
+//	    for (int i = 0; i < animals.size(); i++) {
+//	        Animal animal = animals.get(i);
+//	        if (animal.getSize().in(sizes)) {
+//	            result++;
+//	        }
+//	    }
+//	    return result;
+	    return animals.stream().filter(e->e.getSize().in(sizes)).collect(Collectors.counting()).intValue();
 	}
 
 	/**
 	 * TODO: TASK 1.05 - return the sum of all the animals' age
 	 */
 	public static int sumAnimalsAge(List<Animal> animals) {
-		int result = 0;
-		for (int i = 0; i < animals.size(); i++) {
-			result += animals.get(i).getAge();
-		}
-		return result;
+//		int result = 0;
+//		for (int i = 0; i < animals.size(); i++) {
+//			result += animals.get(i).getAge();
+//		}
+//		return result;
+	    return animals.stream().map(e->e.getAge()).mapToInt(e->e.intValue()).sum();
 	}
 
 	/**
 	 * TODO: TASK 1.06 - return a list containing no identical animals
 	 */
 	public static List<Animal> removeDuplicates(List<Animal> animals) {
-		List<Animal> result = new ArrayList<>();
-		for (int i = 0; i < animals.size(); i++) {
-			Animal animal = animals.get(i);
-			if (!result.contains(animal)) {
-				result.add(animal);
-			}
-		}
-		return result;
+//		List<Animal> result = new ArrayList<>();
+//		for (int i = 0; i < animals.size(); i++) {
+//			Animal animal = animals.get(i);
+//			if (!result.contains(animal)) {
+//				result.add(animal);
+//			}
+//		}
+		return animals.stream().distinct().collect(Collectors.toList());
 	}
 
 	/**
@@ -138,14 +141,16 @@ public final class FarmUtilsStreaming {
 	 * greater or equal than start and smaller than end
 	 */
 	public static List<Animal> getMiddlePartOfList(List<Animal> animals, int start, int end) {
-		List<Animal> result = new ArrayList<>();
-		for (int i = 0; i < animals.size(); i++) {
-			Animal animal = animals.get(i);
-			if (i >= start && i < end) {
-				result.add(animal);
-			}
-		}
-		return result;
+//		List<Animal> result = new ArrayList<>();
+//		for (int i = 0; i < animals.size(); i++) {
+//			Animal animal = animals.get(i);
+//			if (i >= start && i < end) {
+//				result.add(animal);
+//			}
+//		}
+//		return result;
+	    //reduce? czy groupBy.
+	    return animals.stream().limit(end).skip(start).collect(Collectors.toList());
 	}
 
 	/**
@@ -158,6 +163,7 @@ public final class FarmUtilsStreaming {
 			result.put(i, animals.get(i));
 		}
 		return result;
+	    
 	}
 
 	/**
@@ -181,33 +187,32 @@ public final class FarmUtilsStreaming {
 	 * return the first of them
 	 */
 	public static Animal getOldestAnimal(List<Animal> animals) {
-		Animal result = animals.get(0);
-		int maxAge = result.getAge();
-		for (int i = 0; i < animals.size(); i++) {
-			Animal animal = animals.get(i);
-			if (animal.getAge() > maxAge) {
-				maxAge = animal.getAge();
-				result = animal;
-			}
-		}
-		return result;
-	}
-
+//		Animal result = animals.get(0);
+//		int maxAge = result.getAge();
+//		for (int i = 0; i < animals.size(); i++) {
+//			Animal animal = animals.get(i);
+//			if (animal.getAge() > maxAge) {
+//				maxAge = animal.getAge();
+//				result = animal;
+//			}
+//		} e->e.getAge() - on wie ze tych elementow e jest tyle co elementow w strukturze animals)
+		return animals.stream().max(Comparator.comparing(Animal::getAge)).get();   // method reference ::, max mi zwroci i tak pierwszego bo sortuje
+	}                                                                              // nie moze byc e->e.getAge, nieznajomosc typu
 	/**
 	 * TODO: TASK 1.11 - return the animal whose name is last in alphabetical
 	 * order - if more than one exists, return the first of them
 	 */
 	public static Animal getLastAnimalAlphabetically(List<Animal> animals) {
-		Animal result = animals.get(0);
-		String lastNameAlphabetically = result.getName();
-		for (int i = 0; i < animals.size(); i++) {
-			Animal animal = animals.get(i);
-			if (animal.getName().compareTo(lastNameAlphabetically) > 0) {
-				lastNameAlphabetically = animal.getName();
-				result = animal;
-			}
-		}
-		return result;
+//		Animal result = animals.get(0);
+//		String lastNameAlphabetically = result.getName();
+//		for (int i = 0; i < animals.size(); i++) {
+//			Animal animal = animals.get(i);
+//			if (animal.getName().compareTo(lastNameAlphabetically) > 0) {
+//				lastNameAlphabetically = animal.getName();
+//				result = animal;
+//			}
+//		}
+		return animals.stream().max(Comparator.comparing(Animal::getName)).get();
 	}
 
 	/**
@@ -215,16 +220,16 @@ public final class FarmUtilsStreaming {
 	 * return the first of them
 	 */
 	public static Animal getLargestAnimal(List<Animal> animals) {
-		Animal result = animals.get(0);
-		Size maxSize = result.getSize();
-		for (int i = 0; i < animals.size(); i++) {
-			Animal animal = animals.get(i);
-			if (animal.getSize().compareTo(maxSize) > 0) {
-				maxSize = animal.getSize();
-				result = animal;
-			}
-		}
-		return result;
+//		Animal result = animals.get(0);
+//		Size maxSize = result.getSize();
+//		for (int i = 0; i < animals.size(); i++) {
+//			Animal animal = animals.get(i);
+//			if (animal.getSize().compareTo(maxSize) > 0) {
+//				maxSize = animal.getSize();
+//				result = animal;
+//			}
+//		}
+		return animals.stream().max(Comparator.comparing(Animal::getSize)).get();
 	}
 
 	/**
@@ -232,16 +237,16 @@ public final class FarmUtilsStreaming {
 	 * return the first of them
 	 */
 	public static Animal getYoungestAnimal(List<Animal> animals) {
-		Animal result = animals.get(0);
-		int minAge = result.getAge();
-		for (int i = 0; i < animals.size(); i++) {
-			Animal animal = animals.get(i);
-			if (animal.getAge() < minAge) {
-				minAge = animal.getAge();
-				result = animal;
-			}
-		}
-		return result;
+//		Animal result = animals.get(0);
+//		int minAge = result.getAge();
+//		for (int i = 0; i < animals.size(); i++) {
+//			Animal animal = animals.get(i);
+//			if (animal.getAge() < minAge) {
+//				minAge = animal.getAge();
+//				result = animal;
+//			}
+//		}
+		return animals.stream().min(Comparator.comparing(Animal::getAge)).get();
 	}
 
 	/**
@@ -249,16 +254,16 @@ public final class FarmUtilsStreaming {
 	 * order - if more than one exists, return the first of them
 	 */
 	public static Animal getFirstAnimalAlphabetically(List<Animal> animals) {
-		Animal result = animals.get(0);
-		String firstNameAlphabetically = result.getName();
-		for (int i = 0; i < animals.size(); i++) {
-			Animal animal = animals.get(i);
-			if (animal.getName().compareTo(firstNameAlphabetically) < 0) {
-				firstNameAlphabetically = animal.getName();
-				result = animal;
-			}
-		}
-		return result;
+//		Animal result = animals.get(0);
+//		String firstNameAlphabetically = result.getName();
+//		for (int i = 0; i < animals.size(); i++) {
+//			Animal animal = animals.get(i);
+//			if (animal.getName().compareTo(firstNameAlphabetically) < 0) {
+//				firstNameAlphabetically = animal.getName();
+//				result = animal;
+//			}
+//		}
+		return animals.stream().min(Comparator.comparing(Animal::getName)).get();
 	}
 
 	/**
@@ -266,16 +271,16 @@ public final class FarmUtilsStreaming {
 	 * return the first of them
 	 */
 	public static Animal getSmallestAnimal(List<Animal> animals) {
-		Animal result = animals.get(0);
-		Size minSize = result.getSize();
-		for (int i = 0; i < animals.size(); i++) {
-			Animal animal = animals.get(i);
-			if (animal.getSize().compareTo(minSize) < 0) {
-				minSize = animal.getSize();
-				result = animal;
-			}
-		}
-		return result;
+//		Animal result = animals.get(0);
+//		Size minSize = result.getSize();
+//		for (int i = 0; i < animals.size(); i++) {
+//			Animal animal = animals.get(i);
+//			if (animal.getSize().compareTo(minSize) < 0) {
+//				minSize = animal.getSize();
+//				result = animal;
+//			}
+//		}
+		return animals.stream().min(Comparator.comparing(Animal::getSize)).get();
 	}
 
 	/**
@@ -283,12 +288,15 @@ public final class FarmUtilsStreaming {
 	 * the second parameter
 	 */
 	public static boolean containsAnimalWithGivenName(List<Animal> animals, String name) {
-		for (int i = 0; i < animals.size(); i++) {
-			if (animals.get(i).getName().equals(name)) {
-				return true;
-			}
-		}
-		return false;
+//		for (int i = 0; i < animals.size(); i++) {
+//			if (animals.get(i).getName().equals(name)) {
+//				return true;
+//			}
+//		}
+	    //anymatch
+	    //1sttry - zazwyczaj zadania tutaj sie sprowadzaja do dwoch callow metody po streamie.
+		//return animals.stream().filter(e->e.getName().equals(name)).findAny().orElse(null) != null; // czy to jest jakies kiepskie?
+	    return animals.stream().anyMatch(e->e.getName().equals(name));
 	}
 
 	/**
@@ -296,12 +304,13 @@ public final class FarmUtilsStreaming {
 	 * the second parameter
 	 */
 	public static boolean containsAnimalOfGivenAge(List<Animal> animals, int age) {
-		for (int i = 0; i < animals.size(); i++) {
-			if (animals.get(i).getAge() == age) {
-				return true;
-			}
-		}
-		return false;
+//		for (int i = 0; i < animals.size(); i++) {
+//			if (animals.get(i).getAge() == age) {
+//				return true;
+//			}
+//		}
+//		return false;
+	    return animals.stream().anyMatch(e->e.getAge() == age);
 	}
 
 	/**
@@ -309,12 +318,12 @@ public final class FarmUtilsStreaming {
 	 * second parameter
 	 */
 	public static boolean allAnimalsHaveGivenName(List<Animal> animals, String name) {
-		for (int i = 0; i < animals.size(); i++) {
-			if (!animals.get(i).getName().equals(name)) {
-				return false;
-			}
-		}
-		return true;
+//		for (int i = 0; i < animals.size(); i++) {
+//			if (!animals.get(i).getName().equals(name)) {
+//				return false;
+//			}
+//		}
+		return animals.stream().allMatch(e->e.getName().equals(name));
 	}
 
 	/**
@@ -322,12 +331,12 @@ public final class FarmUtilsStreaming {
 	 * second parameter
 	 */
 	public static boolean allAnimalsAreOfGivenAge(List<Animal> animals, int age) {
-		for (int i = 0; i < animals.size(); i++) {
-			if (animals.get(i).getAge() != age) {
-				return false;
-			}
-		}
-		return true;
+//		for (int i = 0; i < animals.size(); i++) {
+//			if (animals.get(i).getAge() != age) {
+//				return false;
+//			}
+//		}
+		return animals.stream().allMatch(e->e.getAge() == age);
 	}
 
 	/**
@@ -335,12 +344,12 @@ public final class FarmUtilsStreaming {
 	 * second parameter
 	 */
 	public static Animal getFirstAnimalWithGivenName(List<Animal> animals, String name) {
-		for (int i = 0; i < animals.size(); i++) {
-			Animal animal = animals.get(i);
-			if (animal.getName().equals(name)) {
-				return animal;
-			}
-		}
+//		for (int i = 0; i < animals.size(); i++) {
+//			Animal animal = animals.get(i);
+//			if (animal.getName().equals(name)) {
+//				return animal;
+//			}
+//		}
 		return null;
 	}
 
