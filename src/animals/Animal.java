@@ -97,5 +97,6 @@ public abstract class Animal {
 		return sb.toString();
 	}
 
+
 	public abstract Animal copy();
 }

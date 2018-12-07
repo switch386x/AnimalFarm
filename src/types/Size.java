@@ -1,11 +1,14 @@
 package types;
 
+
+import java.util.Arrays;
+
 /**
  * @author MMOSCINS
  */
 public enum Size {
 	MINI(1), SMALL(2), MEDIUM(3), LARGE(4), HUGE(5);
-
+    
 	int size;
 
 	Size(int size) {
@@ -19,13 +22,10 @@ public enum Size {
 	 * passed as method parameter
 	 */
 	public boolean in(Size... sizes) {
-		for (int i = 0; i < sizes.length; i++) {
-			if (this == sizes[i]) {
-				return true;
-			}
-		}
-		return false;
+	    return Arrays.stream(sizes).anyMatch(size->size == this);
+	    //return Arrays.stream(sizes).filter(e->e.equals(Size.values())).findAny() != null;   --1st try
 	}
+	
 
 	public static Size getRandomSize() {
 		// randomness achieved with a series of coin tosses.

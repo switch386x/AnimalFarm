@@ -205,7 +205,7 @@ public final class FarmTests {
 	public void testNumberAnimals() {
 		assertEquals(FarmUtils.numberAnimals(animals), FarmUtilsStreaming.numberAnimals(animals));
 	}
-
+	
 	@Test
 	public void testGroupAnimalsBySize() {
 		assertEquals(FarmUtils.groupAnimalsBySize(animals), FarmUtilsStreaming.groupAnimalsBySize(animals));
