@@ -231,7 +231,7 @@ public final class FarmUtilsStreaming {
         return animals.stream().distinct().limit(2).count() == 1 ? animals.get(0).getSize() : null;
     }
 
-    // funkcja peek
+
 
     /**
      * TODO: TASK 1.25 - repetitive code alert
